@@ -1,0 +1,76 @@
+// app.js
+
+let uploadedImage = null;
+let selectedPhoto = null;
+let currentFrame = null;
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
+// Apply selected photo
+function applyPhoto() {
+    const photoSelect = document.getElementById("photoSelect").value;
+    if (photoSelect === "custom" && document.getElementById("imageUpload").files.length > 0) {
+        const file = document.getElementById("imageUpload").files[0];
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            uploadedImage = new Image();
+            uploadedImage.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(uploadedImage, 0, 0, canvas.width, canvas.height);
+                applyFrame(); // Apply the frame on top of the photo
+            };
+            uploadedImage.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else if (photoSelect !== "custom") {
+        // Load the selected photo from the dropdown
+        selectedPhoto = new Image();
+        selectedPhoto.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(selectedPhoto, 0, 0, canvas.width, canvas.height);
+            applyFrame(); // Apply the frame on top of the photo
+        };
+        selectedPhoto.src = photoSelect;
+    }
+}
+
+// Apply the frame on top of the selected photo
+function applyFrame() {
+    const frameSelect = document.getElementById("frameSelect");
+    currentFrame = new Image();
+    currentFrame.src = frameSelect.value; // Use the selected frame URL
+    currentFrame.onload = function() {
+        ctx.drawImage(currentFrame, 0, 0, canvas.width, canvas.height);
+    };
+}
+
+// Function to download the modified image
+function downloadImage() {
+    const imageLink = document.createElement("a");
+    imageLink.download = "customized_profile.png";
+    imageLink.href = canvas.toDataURL("image/png");
+    imageLink.click();
+}
+
+// Function to generate a shareable link for the customized image
+function generateShareLink() {
+    const dataUrl = canvas.toDataURL("image/png");
+    const shareLink = `${window.location.origin}/share?image=${encodeURIComponent(dataUrl)}`;
+    const shareLinkElement = document.getElementById("shareLink");
+
+    shareLinkElement.href = shareLink;
+    shareLinkElement.textContent = shareLink;
+
+    document.getElementById("shareLinkSection").style.display = "block";
+}
+
+// Event listener for the photo select dropdown
+document.getElementById("photoSelect").addEventListener("change", function() {
+    const photoSelect = this.value;
+    if (photoSelect === "custom") {
+        document.getElementById("customPhotoSection").style.display = "block";
+    } else {
+        document.getElementById("customPhotoSection").style.display = "none";
+        applyPhoto(); // Automatically apply the selected photo
+    }
+});
