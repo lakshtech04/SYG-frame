@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Frame Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Customize Your Profile Frame</h1>
+
+        <!-- Upload Profile Picture Section -->
+        <div class="upload-section">
+            <input type="file" id="profilePicture" accept="image/*" />
+        </div>
+
+        <!-- Frame Selection (optional) -->
+        <div class="frame-selector">
+            <label for="frameSelect">Choose a Frame:</label>
+            <select id="frameSelect">
+                <option value="frame1.png">Frame 1</option>
+                <option value="frame2.png">Frame 2</option>
+                <!-- Add other frame options here -->
+            </select>
+        </div>
+
+        <div id="previewSection">
+            <h3>Preview:</h3>
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+
+        <div id="downloadSection" style="display: none;">
+            <a id="downloadLink" href="#" download>Download Your Profile Picture</a>
+        </div>
+
+        <button onclick="uploadImage()">Generate Profile Frame</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
